@@ -1,4 +1,4 @@
-package com.android.administrator.childrensittingposture.db;
+package com.android.administrator.childrensittingposture.bean;
 
 import org.litepal.crud.DataSupport;
 
@@ -10,6 +10,15 @@ public class CultivateDb extends DataSupport {
     private String thatDayTime;                 //当天日期
     private String cultivateTime;                  //学习累计时间
     private String remindFrequency;     //当天提醒次数
+    private String sumRemindFrequency;  //总提醒次数
+
+    public String getSumRemindFrequency() {
+        return sumRemindFrequency;
+    }
+
+    public void setSumRemindFrequency(String sumRemindFrequency) {
+        this.sumRemindFrequency = sumRemindFrequency;
+    }
 
     public String getThatDayTime() {
         return thatDayTime;

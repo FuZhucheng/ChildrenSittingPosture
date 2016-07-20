@@ -7,14 +7,13 @@ import android.widget.ListView;
 
 import com.android.administrator.childrensittingposture.R;
 import com.android.administrator.childrensittingposture.adapter.MyAdapter;
-import com.android.administrator.childrensittingposture.db.CultivateDb;
+import com.android.administrator.childrensittingposture.bean.CultivateDb;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -95,7 +94,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     public List<CultivateDb> readContacts() {
 
-
+//
         CultivateDb db=new CultivateDb();
         db.setThatDayTime("2016.01.07");
         db.setCultivateTime("3:10:10");

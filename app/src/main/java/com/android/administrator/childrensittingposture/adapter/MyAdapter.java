@@ -6,11 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.administrator.childrensittingposture.R;
-import com.android.administrator.childrensittingposture.db.CultivateDb;
+import com.android.administrator.childrensittingposture.bean.CultivateDb;
 import com.android.administrator.childrensittingposture.db.ViewHolder;
 
 import java.util.List;
