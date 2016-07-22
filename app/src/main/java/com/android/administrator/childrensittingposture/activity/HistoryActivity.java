@@ -2,7 +2,6 @@ package com.android.administrator.childrensittingposture.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ListView;
 
 import com.android.administrator.childrensittingposture.R;
@@ -15,6 +14,8 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,15 +96,17 @@ public class HistoryActivity extends AppCompatActivity {
     public List<CultivateDb> readContacts() {
 
 //
-        CultivateDb db=new CultivateDb();
-        db.setThatDayTime("2016.01.07");
-        db.setCultivateTime("3:10:10");
-        db.setRemindFrequency("8");
-//        db.saveThrows();
-        Log.d("TAG", "news id is " + db.getId());
-        db.save();
-        Log.d("TAG", "news id is " + db.getId());
-        listContacts.add(db);
+//        CultivateDb db=new CultivateDb();
+//        db.setThatDayTime("2016.01.07");
+//        db.setCultivateTime("3:10:10");
+//        db.setRemindFrequency("8");
+////        db.saveThrows();
+//        Log.d("TAG", "news id is " + db.getId());
+//        db.save();
+//        Log.d("TAG", "news id is " + db.getId());
+//        listContacts.add(db);
+        List<CultivateDb> allCultivate = DataSupport.findAll(CultivateDb.class);
+
 
         return listContacts;
     }

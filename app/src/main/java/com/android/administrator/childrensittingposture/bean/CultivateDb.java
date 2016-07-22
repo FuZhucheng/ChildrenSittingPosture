@@ -6,27 +6,12 @@ import org.litepal.crud.DataSupport;
  * Created by Administrator on 2016/7/13.
  */
 public class CultivateDb extends DataSupport {
+
     private int id;
+    private int cultivateTime;                  //学习累计时间
+    private int remindFrequency;     //当天提醒次数
+    private int sumRemindFrequency;  //总提醒次数
     private String thatDayTime;                 //当天日期
-    private String cultivateTime;                  //学习累计时间
-    private String remindFrequency;     //当天提醒次数
-    private String sumRemindFrequency;  //总提醒次数
-
-    public String getSumRemindFrequency() {
-        return sumRemindFrequency;
-    }
-
-    public void setSumRemindFrequency(String sumRemindFrequency) {
-        this.sumRemindFrequency = sumRemindFrequency;
-    }
-
-    public String getThatDayTime() {
-        return thatDayTime;
-    }
-
-    public void setThatDayTime(String thatDayTime) {
-        this.thatDayTime = thatDayTime;
-    }
 
     public int getId() {
         return id;
@@ -36,19 +21,35 @@ public class CultivateDb extends DataSupport {
         this.id = id;
     }
 
-    public String getCultivateTime() {
+    public int getCultivateTime() {
         return cultivateTime;
     }
 
-    public void setCultivateTime(String cultivateTime) {
+    public void setCultivateTime(int cultivateTime) {
         this.cultivateTime = cultivateTime;
     }
 
-    public String getRemindFrequency() {
+    public int getRemindFrequency() {
         return remindFrequency;
     }
 
-    public void setRemindFrequency(String remindFrequency) {
+    public void setRemindFrequency(int remindFrequency) {
         this.remindFrequency = remindFrequency;
+    }
+
+    public int getSumRemindFrequency() {
+        return sumRemindFrequency;
+    }
+
+    public void setSumRemindFrequency(int sumRemindFrequency) {
+        this.sumRemindFrequency = sumRemindFrequency;
+    }
+
+    public String getThatDayTime() {
+        return thatDayTime;
+    }
+
+    public void setThatDayTime(String thatDayTime) {
+        this.thatDayTime = thatDayTime;
     }
 }

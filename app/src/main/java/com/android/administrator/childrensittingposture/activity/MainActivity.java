@@ -1,6 +1,7 @@
 package com.android.administrator.childrensittingposture.activity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,7 +10,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.administrator.childrensittingposture.R;
+import com.android.administrator.childrensittingposture.bean.CultivateDb;
 import com.android.administrator.childrensittingposture.dao.SendRequest;
+
+import org.litepal.crud.DataSupport;
+import org.litepal.tablemanager.Connector;
 
 public class MainActivity extends AppCompatActivity implements android.view.View.OnClickListener {
 
@@ -28,11 +33,13 @@ public class MainActivity extends AppCompatActivity implements android.view.View
     public static final int REMIND_NUMBER=2;
     public static final int SUM_REMIND_NUMBER=3;
     public static final int BAR_DATA=4;
+    public static final int SUCCESS=5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SQLiteDatabase db = Connector.getDatabase();
 
         initView();
         initListener();
@@ -51,37 +58,48 @@ public class MainActivity extends AppCompatActivity implements android.view.View
         tv_history=(TextView)findViewById(R.id.tv_history);
         tv_refresh=(TextView)findViewById(R.id.tv_refresh);
 
-
-        recHandler=new Handler(){
+        mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what){
                     case CUMULATION_TIME :
                         if (msg.obj!=null){
-
+//                            tv_time.setText("1:20:12");
                         }
                         break;
                     case REMIND_NUMBER :
-                        if (msg.obj!=null){
+//                            tv_remind.setText("8");
 
-                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+//                                        tv_frequency.setText("8");
+                                CultivateDb firstDb = DataSupport.findFirst(CultivateDb.class);
+                                tv_frequency.setText(firstDb.getRemindFrequency()+"");
+
+                            }
+                        });
+
+
                         break;
                     case SUM_REMIND_NUMBER :
-                        if (msg.obj!=null){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+//                            tv_CumulativeQuantity.setText("20");
+                                CultivateDb sumRemindNumber=DataSupport.findFirst(CultivateDb.class);
+                                tv_CumulativeQuantity.setText(sumRemindNumber.getSumRemindFrequency()+"");
+                            }
+                        });
 
-                        }
-                        break;
-                    case BAR_DATA :
-                        if (msg.obj!=null){
-
-                        }
                         break;
                 }
             }
         };
-
     }
+
+
     private void initListener(){
         tv_time.setOnClickListener(this);
         tv_frequency.setOnClickListener(this);
@@ -112,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements android.view.View
                     public void run() {
 //                Toast.makeText(MainActivity.this, "hello", Toast.LENGTH_SHORT).show();
 //                        Log.e("readytosend",time+"");
-                        new SendRequest().SendUid(1,recHandler,MainActivity.this);
+                        new SendRequest().SendUid(1,mHandler,MainActivity.this);
                     }
                 }, 2500);
                 break;

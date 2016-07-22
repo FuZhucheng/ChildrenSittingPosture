@@ -95,9 +95,9 @@ public class MyAdapter extends BaseAdapter {
 
 
 
-        holder.tv_thatDaytime.setText(listContacts.get(position).getThatDayTime());
-        holder.tv_timeCultivate.setText(listContacts.get(position).getCultivateTime());
-        holder.tv_remindFrequency.setText(listContacts.get(position).getRemindFrequency());
+//        holder.tv_thatDaytime.setText(listContacts.get(position).getThatDayTime());
+//        holder.tv_timeCultivate.setText(listContacts.get(position).getCultivateTime());
+//        holder.tv_remindFrequency.setText(listContacts.get(position).getRemindFrequency());
         Log.e("ada",listContacts.get(position).getThatDayTime());
         return convertView;
     }

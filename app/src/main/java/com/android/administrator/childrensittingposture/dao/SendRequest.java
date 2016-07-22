@@ -2,7 +2,10 @@ package com.android.administrator.childrensittingposture.dao;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+
+import com.android.administrator.childrensittingposture.activity.MainActivity;
 
 import java.io.IOException;
 
@@ -22,15 +25,20 @@ public class SendRequest {
             @Override
             public void run() {
                 final Request request=new Request.Builder()
-                                                                        .url("http://www.baidu.com")
+                                                                        .url("http://test.lab.nichoeit.com/json/")
                                                                         .build();
                 Response response=null;
                 try{
                     response=mOkHttpClient.newCall(request).execute();
                     if (response.isSuccessful()){
                         Log.e("success","success");
+                        Message message=new Message();
+                        message.obj= MainActivity.SUCCESS;
+                        handler.handleMessage(message);
+
+
                         Analysis analysis=new Analysis();
-                        analysis.analysis(response.body().string());
+                        analysis.analysis(context,response.body().string(),handler);
                     }
                     else {
                         throw new IOException("Unexpected code"+response);

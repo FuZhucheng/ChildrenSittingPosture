@@ -5,6 +5,7 @@
     <version value="1" ></version>
 
     <list>
+        <!--<mapping class="com.android.administrator.childrensittingposture.bean.CultivateDb"></mapping>-->
         <mapping class="com.android.administrator.childrensittingposture.bean.CultivateDb"></mapping>
     </list>
 </litepal> 
