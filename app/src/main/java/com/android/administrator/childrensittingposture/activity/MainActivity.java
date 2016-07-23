@@ -1,33 +1,30 @@
 package com.android.administrator.childrensittingposture.activity;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.administrator.childrensittingposture.R;
-import com.android.administrator.childrensittingposture.bean.CultivateDb;
 import com.android.administrator.childrensittingposture.dao.SendRequest;
-
-import org.litepal.crud.DataSupport;
-import org.litepal.tablemanager.Connector;
 
 public class MainActivity extends AppCompatActivity implements android.view.View.OnClickListener {
 
-    private TextView tv_time;
     private TextView tv_frequency;
     private TextView tv_state;
     private TextView tv_remind;
-    private TextView tv_automaticallyRemind;
-    private TextView tv_CumulativeQuantity;
-    private TextView tv_history;
-    private TextView tv_refresh;
 
-    private Handler mHandler,recHandler;
+
+    private Handler mHandler;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public static final int CUMULATION_TIME=1;
     public static final int REMIND_NUMBER=2;
@@ -38,25 +35,22 @@ public class MainActivity extends AppCompatActivity implements android.view.View
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_main);
-        SQLiteDatabase db = Connector.getDatabase();
+//        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
+
 
         initView();
         initListener();
 
 
 
-
 }
     private void initView(){
-        tv_time=(TextView)findViewById(R.id.tv_time);
+
         tv_frequency=(TextView)findViewById(R.id.tv_frequency);
         tv_state=(TextView)findViewById(R.id.tv_state);
         tv_remind=(TextView)findViewById(R.id.tv_remind);
-        tv_automaticallyRemind=(TextView)findViewById(R.id.tv_automaticallyRemind);
-        tv_CumulativeQuantity=(TextView)findViewById(R.id.tv_CumulativeQuantity);
-        tv_history=(TextView)findViewById(R.id.tv_history);
-        tv_refresh=(TextView)findViewById(R.id.tv_refresh);
 
         mHandler = new Handler(){
             @Override
@@ -75,56 +69,28 @@ public class MainActivity extends AppCompatActivity implements android.view.View
                             @Override
                             public void run() {
 //                                        tv_frequency.setText("8");
-                                CultivateDb firstDb = DataSupport.findFirst(CultivateDb.class);
-                                tv_frequency.setText(firstDb.getRemindFrequency()+"");
+//                                CultivateDb firstDb = DataSupport.findFirst(CultivateDb.class);
+//                                tv_frequency.setText(firstDb.getRemindFrequency()+"");
 
                             }
                         });
 
-
-                        break;
-                    case SUM_REMIND_NUMBER :
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-//                            tv_CumulativeQuantity.setText("20");
-                                CultivateDb sumRemindNumber=DataSupport.findFirst(CultivateDb.class);
-                                tv_CumulativeQuantity.setText(sumRemindNumber.getSumRemindFrequency()+"");
-                            }
-                        });
 
                         break;
                 }
             }
         };
-    }
 
 
-    private void initListener(){
-        tv_time.setOnClickListener(this);
-        tv_frequency.setOnClickListener(this);
-        tv_state.setOnClickListener(this);
-        tv_remind.setOnClickListener(this);
-        tv_automaticallyRemind.setOnClickListener(this);
-        tv_CumulativeQuantity.setOnClickListener(this);
-        tv_history.setOnClickListener(this);
-        tv_refresh.setOnClickListener(this);
-    }
-    public void onClick(View view){
-        switch (view.getId()){
-            case R.id.tv_time  :
-                break;
-            case R.id.tv_automaticallyRemind  :
-                Intent intent_automaticallyRemind=new Intent();
-                intent_automaticallyRemind.setClass(MainActivity.this,SettingActivity.class);
-                startActivity(intent_automaticallyRemind);
-                break;
-            case R.id.tv_history  :
-                Intent intent_history=new Intent();
-                intent_history.setClass(MainActivity.this,HistoryActivity.class);
-                startActivity(intent_history);
-                break;
-            case R.id.tv_refresh  :
+        mSwipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.srlayout);
+        mSwipeRefreshLayout.setSize(SwipeRefreshLayout.LARGE);
+        //自定义加载的圆形背景颜色
+//        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.gray);
+        //自定义加载的圆条颜色
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.title_blue,R.color.green,R.color.orange);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -133,10 +99,71 @@ public class MainActivity extends AppCompatActivity implements android.view.View
                         new SendRequest().SendUid(1,mHandler,MainActivity.this);
                     }
                 }, 2500);
-                break;
+                //正常情况下是在加载完成后回调，这里简单模拟延时
+                Toast.makeText(MainActivity.this,"正在刷新",Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this,"刷新完成",Toast.LENGTH_SHORT).show();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                },3000);//6000指延时6s
+            }
+        });
+    }
+
+
+    private void initListener(){
+
+        tv_frequency.setOnClickListener(this);
+        tv_state.setOnClickListener(this);
+        tv_remind.setOnClickListener(this);
+
+    }
+    public void onClick(View view){
+        switch (view.getId()){
+
+//            case R.id.tv_automaticallyRemind  :
+//                Intent intent_automaticallyRemind=new Intent();
+//                intent_automaticallyRemind.setClass(MainActivity.this,SettingActivity.class);
+//                startActivity(intent_automaticallyRemind);
+//                break;
+//            case R.id.tv_history  :
+//                Intent intent_history=new Intent();
+//                intent_history.setClass(MainActivity.this,HistoryActivity.class);
+//                startActivity(intent_history);
+//                break;
+
             default:
                 break;
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int item_id = item.getItemId();
+        switch (item_id) {
+            case R.id.remindStatistics:
+                Intent intent_history=new Intent();
+                intent_history.setClass(MainActivity.this,HistoryActivity.class);
+                startActivity(intent_history);
+                break;
+            case R.id.automaticSetting:
+                Intent intent_automaticallyRemind=new Intent();
+                intent_automaticallyRemind.setClass(MainActivity.this,SettingActivity.class);
+                startActivity(intent_automaticallyRemind);
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 }

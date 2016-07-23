@@ -27,7 +27,7 @@ public class HistoryActivity extends AppCompatActivity {
     public BarDataSet dataset;
 
 
-    private List<CultivateDb> listContacts = new ArrayList<>();  //存储联系人数据
+    private List<CultivateDb> allCultivate = new ArrayList<>();
 
     private MyAdapter adapter;
 
@@ -105,10 +105,10 @@ public class HistoryActivity extends AppCompatActivity {
 //        db.save();
 //        Log.d("TAG", "news id is " + db.getId());
 //        listContacts.add(db);
-        List<CultivateDb> allCultivate = DataSupport.findAll(CultivateDb.class);
+        allCultivate = DataSupport.findAll(CultivateDb.class);
 
 
-        return listContacts;
+        return allCultivate;
     }
 
 

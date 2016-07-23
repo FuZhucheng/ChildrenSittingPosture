@@ -10,25 +10,38 @@
         android:layout_weight="3"
         android:orientation="vertical">
 
-        <com.github.mikephil.charting.charts.BarChart
+        <TextView
             android:layout_width="match_parent"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="提醒统计"
+            android:textColor="@color/title_blue"
+            android:textSize="25sp" />
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
             android:layout_height="240dp"
-            android:id="@+id/chart">
-        </com.github.mikephil.charting.charts.BarChart>
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"></com.github.mikephil.charting.charts.BarChart>
     </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="@color/gray"/>
+        android:layout_height="30dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray" />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="4"
-        android:scrollbars="none"
-        android:background="#01000000"/>
+        android:background="#01000000"
+        android:scrollbars="none" />
 
 
 </LinearLayout>

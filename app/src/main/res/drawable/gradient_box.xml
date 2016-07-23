@@ -75,7 +75,7 @@
 83         内部填充
 84         android:color 颜色值 填充颜色
 85     -->
-    <solid android:color="#9CCC65" />
+    <solid android:color="#DDDEFD" />
 
     <!--
   91          描边

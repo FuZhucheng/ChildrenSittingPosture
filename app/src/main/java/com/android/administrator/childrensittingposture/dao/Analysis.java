@@ -30,7 +30,8 @@ public class Analysis {
 
     public void analysis(Context context, String jsonData,Handler handler){
         try {
-            CultivateDb cultivateDb=new CultivateDb();
+                CultivateDb cultivateDb = new CultivateDb();
+
             List<CultivateDb>postureBeanList=new ArrayList<>();
             JSONArray jsonArray=new JSONArray(jsonData);
             int index=0;
@@ -72,4 +73,5 @@ public class Analysis {
         message.what=MainActivity.SUM_REMIND_NUMBER;
         handler.handleMessage(message);
     }
+
 }
