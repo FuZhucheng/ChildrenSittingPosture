@@ -27,30 +27,17 @@ import okhttp3.Response;
 
 public class SettingActivity extends Activity {
 
-    private TextView tv_sure;
-
-    PickerView pvMinuteStart;
-    PickerView pvSecondsStart;
-    PickerView pvHourStart;
-    PickerView pvMinuteEnd;
-    PickerView pvSecondsEnd;
-    PickerView pvHourEnd;
-
-    PickerView pv_learned;
-    PickerView pv_rest;
+    PickerView pv_hour;
+    PickerView pv_minute;
+    private TextView tv__setting_remind;
 
     OkHttpClient okHttpClient;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
 
-    List<String> hoursStart;
-    List<String> minuteStart;
+    List<String> hours;
+    List<String> minute;
     List<String> secondsStart;
-    List<String> hoursEnd;
-    List<String> minuteEnd;
-    List<String> secondsEnd;
-    List<String> pv_learned_time;
-    List<String> pv_rest_time;
 
 
     JSONObject person;
@@ -60,6 +47,8 @@ public class SettingActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_setting);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlt_setting);
+
 
         try {
             // 首先最外层是{}，是创建一个对象
@@ -85,14 +74,10 @@ public class SettingActivity extends Activity {
         initView(person);
         initList();
 
-        setContinuedLearnData();
-        setRestTimeData();
+
         setHoursStart();
         setMinuteStart();
-        setSecondsStart();
-        setHoursEnd();
-        setMinuteEnd();
-        setSecondsEnd();
+
 
 
 
@@ -101,78 +86,55 @@ public class SettingActivity extends Activity {
 
 
     private void initView(final JSONObject person) {
-        pvHourStart = (PickerView) findViewById(R.id.pv_hour);
-        pvMinuteStart = (PickerView) findViewById(R.id.minute_pv);
-        pvSecondsStart = (PickerView) findViewById(R.id.second_pv);
-        pvHourEnd = (PickerView) findViewById(R.id.pv_hour2);
-        pvMinuteEnd = (PickerView) findViewById(R.id.minute_pv2);
-        pvSecondsEnd = (PickerView) findViewById(R.id.second_pv2);
-        pv_learned = (PickerView) findViewById(R.id.pv_learned);
-        pv_rest = (PickerView) findViewById(R.id.pv_rest);
-        tv_sure=(TextView)findViewById(R.id.tv_sure);
-        tv_sure.setOnClickListener(new View.OnClickListener() {
+        tv__setting_remind=(TextView)findViewById(R.id.tv__setting_remind);
+        pv_hour=(PickerView)findViewById(R.id.pv_hour);
+        pv_minute=(PickerView)findViewById(R.id.pv_minute);
+
+        tv__setting_remind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //开启一个线程，做联网操作
+                                //开启一个线程，做联网操作
                 new Thread() {
                     @Override
                     public void run() {
 
-                        postJson(person);
+//                        postJson(person);
                     }
                 }.start();
             }
         });
+//        tv_sure.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //开启一个线程，做联网操作
+////                new Thread() {
+////                    @Override
+////                    public void run() {
+////
+////                        postJson(person);
+////                    }
+////                }.start();
+//            }
+//        });
     }
 
             private void initList() {
-                hoursStart = new ArrayList<String>();
-                minuteStart = new ArrayList<String>();
+                hours = new ArrayList<String>();
+                minute = new ArrayList<String>();
                 secondsStart = new ArrayList<String>();
-                hoursEnd = new ArrayList<String>();
-                minuteEnd = new ArrayList<String>();
-                secondsEnd = new ArrayList<String>();
-                pv_learned_time = new ArrayList<String>();
-                pv_rest_time = new ArrayList<String>();
+
 
 
             }
 
 
-            private void setContinuedLearnData() {
-                for (int i = 0; i < 60; i++) {
-                    pv_learned_time.add(i < 10 ? "0" + i : "" + i);
-                }
-                pv_learned.setData(pv_learned_time);
-                pv_learned.setOnSelectListener(new PickerView.onSelectListener() {
-                    @Override
-                    public void onSelect(String text) {
-                        Toast.makeText(SettingActivity.this, "选择了" + text + "时", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            private void setRestTimeData() {
-
-                for (int i = 0; i < 60; i++) {
-                    pv_rest_time.add(i < 10 ? "0" + i : "" + i);
-                }
-
-                pv_rest.setData(pv_learned_time);
-                pv_rest.setOnSelectListener(new PickerView.onSelectListener() {
-                    @Override
-                    public void onSelect(String text) {
-                        Toast.makeText(SettingActivity.this, "选择了" + text + "时", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
 
             private void setHoursStart() {
                 for (int i = 0; i < 24; i++) {
-                    hoursStart.add("" + i);
+                    hours.add("" + i);
                 }
-                pvHourStart.setData(hoursStart);
-                pvHourStart.setOnSelectListener(new PickerView.onSelectListener() {
+                pv_hour.setData(hours);
+                pv_hour.setOnSelectListener(new PickerView.onSelectListener() {
                     @Override
                     public void onSelect(String text) {
                         Toast.makeText(SettingActivity.this, "选择了" + text + "时", Toast.LENGTH_SHORT).show();
@@ -183,10 +145,10 @@ public class SettingActivity extends Activity {
 
             private void setMinuteStart() {
                 for (int i = 0; i < 60; i++) {
-                    minuteStart.add(i < 10 ? "0" + i : "" + i);
+                    minute.add(i < 10 ? "0" + i : "" + i);
                 }
-                pvMinuteStart.setData(minuteStart);
-                pvMinuteStart.setOnSelectListener(new PickerView.onSelectListener() {
+                pv_minute.setData(minute);
+                pv_minute.setOnSelectListener(new PickerView.onSelectListener() {
 
                     @Override
                     public void onSelect(String text) {
@@ -196,65 +158,6 @@ public class SettingActivity extends Activity {
                 });
             }
 
-            private void setSecondsStart() {
-
-                for (int i = 0; i < 60; i++) {
-                    secondsStart.add(i < 10 ? "0" + i : "" + i);
-                }
-
-                pvSecondsStart.setData(secondsStart);
-                pvSecondsStart.setOnSelectListener(new PickerView.onSelectListener() {
-
-                    @Override
-                    public void onSelect(String text) {
-                        Toast.makeText(SettingActivity.this, "选择了 " + text + " 秒",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            }
-
-            private void setHoursEnd() {
-                for (int i = 0; i < 24; i++) {
-                    hoursEnd.add("" + i);
-                }
-                pvHourEnd.setData(hoursStart);
-                pvHourEnd.setOnSelectListener(new PickerView.onSelectListener() {
-                    @Override
-                    public void onSelect(String text) {
-                        Toast.makeText(SettingActivity.this, "选择了" + text + "时", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            private void setMinuteEnd() {
-                for (int i = 0; i < 60; i++) {
-                    minuteEnd.add(i < 10 ? "0" + i : "" + i);
-                }
-                pvMinuteEnd.setData(minuteStart);
-                pvMinuteEnd.setOnSelectListener(new PickerView.onSelectListener() {
-                    @Override
-                    public void onSelect(String text) {
-                        Toast.makeText(SettingActivity.this, "选择了 " + text + " 分",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            private void setSecondsEnd() {
-                for (int i = 0; i < 60; i++) {
-                    secondsEnd.add(i < 10 ? "0" + i : "" + i);
-                }
-                pvSecondsEnd.setData(secondsStart);
-                pvSecondsEnd.setOnSelectListener(new PickerView.onSelectListener() {
-
-                    @Override
-                    public void onSelect(String text) {
-                        Toast.makeText(SettingActivity.this, "选择了 " + text + " 秒",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
     private void postJson(JSONObject persona) {
         //申明给服务端传递一个json串
         //创建一个OkHttpClient对象

@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="提醒统计"
-            android:textColor="@color/title_blue"
+            android:textColor="@color/blue"
             android:textSize="25sp" />
 
         <com.github.mikephil.charting.charts.BarChart

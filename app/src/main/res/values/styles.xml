@@ -3,20 +3,32 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 
     <style name="WindowTitleBackground">
-        <item name="android:background">@color/title_blue</item>
+        <item name="android:background">@color/blue</item>
     </style>
 
     <style name="MyTheme" parent="android:Theme">
-        <item name="android:windowTitleSize">10dp</item>
+        <item name="android:windowTitleSize">40dp</item>
         <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:background">@color/blue</item>
     </style>
 
+
+    <style name="AnimationPreview">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
+    <style name="MyClockStyle">
+
+        <item name="clock">@drawable/blank_clock</item>
+        <item name="minute">@drawable/minute_hand</item>
+        <item name="hour">@drawable/hour_hand</item>
+        <item name="second">@drawable/sec_hand</item>
+        <item name="center_clock">@drawable/hand_center</item>
+    </style>
 </resources>

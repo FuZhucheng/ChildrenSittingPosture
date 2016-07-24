@@ -75,16 +75,7 @@
 83         内部填充
 84         android:color 颜色值 填充颜色
 85     -->
-    <solid android:color="#DDDEFD" />
+    <solid android:color="#4fc1e9" />
 
-    <!--
-  91          描边
-  92          android:width 整型 描边的宽度
-  93          android:color 颜色值 描边的颜色
-  94          android:dashWidth 整型 表示描边的样式是虚线的宽度， 值为0时，表示为实线。值大于0则为虚线。
-  95          android:dashGap      整型 表示描边为虚线时，虚线之间的间隔 即“ - - - - ”
-  96      -->
-    <stroke
-        android:width="2dp"
-        android:color="#dcdcdc" />
+
 </shape>

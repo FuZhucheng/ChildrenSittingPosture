@@ -75,7 +75,7 @@
 83         内部填充
 84         android:color 颜色值 填充颜色
 85     -->
-    <solid android:color="#FFFFFF" />
+    <solid android:color="#4fc1e9" />
 
     <!--
   91          描边
@@ -85,6 +85,6 @@
   95          android:dashGap      整型 表示描边为虚线时，虚线之间的间隔 即“ - - - - ”
   96      -->
     <stroke
-        android:width="2dp"
-        android:color="#dcdcdc" />
+        android:width="5dp"
+        android:color="#FFFFFF" />
 </shape>
