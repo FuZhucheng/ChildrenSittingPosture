@@ -31,4 +31,6 @@
         <item name="second">@drawable/sec_hand</item>
         <item name="center_clock">@drawable/hand_center</item>
     </style>
+
+
 </resources>

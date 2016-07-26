@@ -8,10 +8,7 @@ import android.util.Log;
 import com.android.administrator.childrensittingposture.activity.MainActivity;
 import com.android.administrator.childrensittingposture.bean.CultivateDb;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,9 +21,9 @@ import java.util.List;
  */
 public class Analysis {
     private BarChart barChart;
-    private ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
-    private BarDataSet dataset;
-    private ArrayList<String> labels = new ArrayList<String>();
+    private ArrayList<BarEntry> entriesBar = new ArrayList<BarEntry>();
+//    private BarDataSet dataset;
+    private ArrayList<String> XlableBar = new ArrayList<String>();
 
     public void analysis(Context context, String jsonData,Handler handler){
         try {
@@ -45,9 +42,9 @@ public class Analysis {
 
                 postureBeanList.add(cultivateDb);
 
-                entries.add(new BarEntry((float) cultivateDb.getRemindFrequency(),index));
+                entriesBar.add(new BarEntry((float) cultivateDb.getRemindFrequency(),index));
                 index++;
-                labels.add(cultivateDb.getThatDayTime());
+                XlableBar.add(cultivateDb.getThatDayTime());
                 Log.e("TAG", String.valueOf(cultivateDb.getId()));
                 cultivateDb.save();
                 Log.e("TAG", String.valueOf(cultivateDb.getId()));
@@ -57,12 +54,12 @@ public class Analysis {
             e.printStackTrace();
         }
 
-        dataset = new BarDataSet(entries, "");
-        dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
-        BarData data = new BarData(labels, dataset);
+//        dataset = new BarDataSet(entriesBar, "");
+//        dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+//        BarData data = new BarData(XlableBar, dataset);
         Message messag=new Message();
         messag.what= MainActivity.BAR_DATA;
-        messag.obj=data;
+//        messag.obj=data;
         handler.handleMessage(messag);
 
 

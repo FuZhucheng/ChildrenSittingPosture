@@ -1,12 +1,15 @@
 package com.android.administrator.childrensittingposture.activity;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +18,7 @@ import com.android.administrator.childrensittingposture.R;
 import com.android.administrator.childrensittingposture.dao.SendRequest;
 import com.android.administrator.childrensittingposture.dialog.AddPopWindow;
 
-public class MainActivity extends Activity implements android.view.View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener {
 
     private TextView tv_studyOrRest;
     private TextView tv_studyOrRestTime;
@@ -39,12 +42,23 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
     public static final int BAR_DATA = 4;
     public static final int SUCCESS = 5;
 
+    private int SYSTEM_STATE=0x3bafda;
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_main);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
+        Window window = MainActivity.this.getWindow();
+//取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+//需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//设置状态栏颜色
+        window.setStatusBarColor(SYSTEM_STATE);
 
 
         initView();
@@ -137,11 +151,18 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_mainRemind :
+                if (tv_mainRemind.getText()=="休息一下吧!") {
+                    tv_mainRemind.setText("是时候休息了喔!");
+                }
+                else if (tv_mainRemind.getText()=="是时候休息了喔!"){
+                    tv_mainRemind.setText("休息一下吧!");
+                }
                 break;
             case R.id.img_main_setting :
                 AddPopWindow addPopWindow = new AddPopWindow(MainActivity.this);
                 addPopWindow.showPopupWindow(img_main_setting);
                 break;
+
 
             default:
                 break;
@@ -149,25 +170,4 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 
     }
 
-
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int item_id = item.getItemId();
-//        switch (item_id) {
-//            case R.id.remindStatistics:
-////                Intent intent_history = new Intent();
-////                intent_history.setClass(MainActivity.this, HistoryActivity.class);
-////                startActivity(intent_history);
-//                break;
-//            case R.id.automaticSetting:
-////                Intent intent_automaticallyRemind = new Intent();
-////                intent_automaticallyRemind.setClass(MainActivity.this, SettingActivity.class);
-////                startActivity(intent_automaticallyRemind);
-//                break;
-//            default:
-//                return false;
-//        }
-//        return true;
-//    }
 }

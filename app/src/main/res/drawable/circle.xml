@@ -8,9 +8,7 @@
     <!--  内环颜色-->
         <solid android:color="@color/blue"/>
     <!-- 外环颜色 -->
-    <stroke
-        android:width="2dp"
-        android:color="@color/gray"/>
+
     <size android:width="20dp"
     android:height="20dp"/>
 </shape>

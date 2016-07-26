@@ -1,14 +1,17 @@
 package com.android.administrator.childrensittingposture.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.administrator.childrensittingposture.R;
+import com.android.administrator.childrensittingposture.dialog.ToastCommom;
 import com.android.administrator.childrensittingposture.view.PickerView;
 
 import org.json.JSONArray;
@@ -25,11 +28,15 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class SettingActivity extends Activity {
+public class SettingActivity extends Activity  implements View.OnClickListener{
+
+
+    private ToastCommom toastCommom;
 
     PickerView pv_hour;
     PickerView pv_minute;
     private TextView tv__setting_remind;
+    private ImageView img_setting_back;
 
     OkHttpClient okHttpClient;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -73,6 +80,7 @@ public class SettingActivity extends Activity {
 
         initView(person);
         initList();
+        initListener();
 
 
         setHoursStart();
@@ -89,6 +97,8 @@ public class SettingActivity extends Activity {
         tv__setting_remind=(TextView)findViewById(R.id.tv__setting_remind);
         pv_hour=(PickerView)findViewById(R.id.pv_hour);
         pv_minute=(PickerView)findViewById(R.id.pv_minute);
+        img_setting_back=(ImageView)findViewById(R.id.img_setting_back);
+
 
         tv__setting_remind.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +108,7 @@ public class SettingActivity extends Activity {
                     @Override
                     public void run() {
 
-//                        postJson(person);
+                        postJson(person);
                     }
                 }.start();
             }
@@ -116,6 +126,9 @@ public class SettingActivity extends Activity {
 ////                }.start();
 //            }
 //        });
+    }
+    private void initListener(){
+        img_setting_back.setOnClickListener(this);
     }
 
             private void initList() {
@@ -137,7 +150,9 @@ public class SettingActivity extends Activity {
                 pv_hour.setOnSelectListener(new PickerView.onSelectListener() {
                     @Override
                     public void onSelect(String text) {
-                        Toast.makeText(SettingActivity.this, "选择了" + text + "时", Toast.LENGTH_SHORT).show();
+                        toastCommom = ToastCommom.createToastConfig();
+                        toastCommom.ToastShow(SettingActivity.this, (ViewGroup)findViewById(R.id.toast_layout_root),"选择了 " +  text+ " 时");
+
                     }
                 });
 
@@ -152,8 +167,10 @@ public class SettingActivity extends Activity {
 
                     @Override
                     public void onSelect(String text) {
-                        Toast.makeText(SettingActivity.this, "选择了 " + text + " 分",
-                                Toast.LENGTH_SHORT).show();
+                        toastCommom = ToastCommom.createToastConfig();
+                        toastCommom.ToastShow(SettingActivity.this, (ViewGroup)findViewById(R.id.toast_layout_root), "选择了 " + text+ " 分");
+//                        Toast.makeText(SettingActivity.this, "选择了 " + text + " 分",
+//                                Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -182,5 +199,17 @@ public class SettingActivity extends Activity {
             e.printStackTrace();
         }
 
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.img_setting_back :
+                Intent intent_settingBack=new Intent();
+                intent_settingBack.setClass(SettingActivity.this,MainActivity.class);
+                startActivity(intent_settingBack);
+                break;
+        }
     }
 }

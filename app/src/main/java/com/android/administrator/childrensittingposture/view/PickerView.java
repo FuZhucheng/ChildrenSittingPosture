@@ -49,7 +49,7 @@ public class PickerView extends View
     private float mMaxTextAlpha = 255;
     private float mMinTextAlpha = 120;
 
-    private int mColorText = 0x333333;
+    private int mColorText = 0xFFFFFF;
 
     private int mViewHeight;
     private int mViewWidth;

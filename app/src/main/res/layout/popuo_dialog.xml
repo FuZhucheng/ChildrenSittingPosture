@@ -34,7 +34,7 @@
                 android:layout_height="fill_parent"
                 android:layout_marginLeft="10dp"
                 android:gravity="center"
-                android:text="添加任务"
+                android:text="自动提醒设置"
                 android:textColor="@color/white"
                 android:textSize="15dip" />
         </LinearLayout>
@@ -62,7 +62,7 @@
                 android:layout_height="fill_parent"
                 android:layout_marginLeft="10dp"
                 android:gravity="center"
-                android:text="团队成员"
+                android:text="历史记录统计"
                 android:textColor="@color/white"
                 android:textSize="15dip" />
         </LinearLayout>

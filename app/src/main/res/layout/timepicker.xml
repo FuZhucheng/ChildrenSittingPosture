@@ -20,14 +20,20 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/pv_hour"
             android:layout_centerVertical="true"
-            android:text="时"
+            android:text="分"
             android:textColor="#FFFFFF"
             android:textSize="13sp"
+            />
+        <TextView
+            android:id="@+id/space"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_toRightOf="@+id/tv_hour"
             />
 
         <com.android.administrator.childrensittingposture.view.PickerView
             android:id="@+id/pv_minute"
-            android:layout_toRightOf="@+id/tv_hour"
+            android:layout_toRightOf="@+id/space"
             android:layout_width="100dp"
             android:layout_height="300dp"
             />
