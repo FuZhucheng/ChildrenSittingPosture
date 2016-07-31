@@ -36,7 +36,6 @@ public class SendRequest {
                         message.obj= MainActivity.SUCCESS;
                         handler.handleMessage(message);
 
-
                         Analysis analysis=new Analysis();
                         analysis.analysis(context,response.body().string(),handler);
                     }

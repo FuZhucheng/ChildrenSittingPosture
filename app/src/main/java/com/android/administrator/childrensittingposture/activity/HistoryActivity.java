@@ -105,6 +105,9 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
         lineChart.setDescription("近七日坐姿矫正次数");
         lineChart.setDescriptionColor(Gray);
         lineChart.setDescriptionColor(Gray);
+        //设置是否可以拖拽，缩放
+        lineChart.setDragEnabled(false);
+        lineChart.setScaleEnabled(false);
 
         //X轴属性
         xAxis = lineChart.getXAxis();
@@ -157,6 +160,7 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
         linbarDataSet.setColor(Color.WHITE);    //设置曲线的颜色
 
 
+
         dataSets = new ArrayList<ILineDataSet>();
         dataSets.add(linbarDataSet);
 
@@ -174,6 +178,9 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
         mChart.setPinchZoom(true);                         //是否只能根据X,Y轴放大缩小
         mChart.setDrawBarShadow(false);       //设置该列空白部分是否用灰色补全
         mChart.setDescriptionColor(Gray);
+        //设置是否可以拖拽，缩放
+        mChart.setDragEnabled(false);
+        mChart.setScaleEnabled(false);
 
         xAxis_bar = mChart.getXAxis();
         xAxis_bar.setPosition(XAxis.XAxisPosition.BOTTOM);

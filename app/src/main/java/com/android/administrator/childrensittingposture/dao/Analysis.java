@@ -8,6 +8,7 @@ import android.util.Log;
 import com.android.administrator.childrensittingposture.activity.MainActivity;
 import com.android.administrator.childrensittingposture.bean.CultivateDb;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.BarEntry;
 
 import org.json.JSONArray;
@@ -21,9 +22,13 @@ import java.util.List;
  */
 public class Analysis {
     private BarChart barChart;
+    private LineChart lineChart;
+
+    //BarChart的数据
     private ArrayList<BarEntry> entriesBar = new ArrayList<BarEntry>();
-//    private BarDataSet dataset;
-    private ArrayList<String> XlableBar = new ArrayList<String>();
+    private ArrayList<String> XlableBar = new ArrayList<String>();//    private BarDataSet dataset;
+
+    //LineChart的数据、
 
     public void analysis(Context context, String jsonData,Handler handler){
         try {
@@ -57,6 +62,7 @@ public class Analysis {
 //        dataset = new BarDataSet(entriesBar, "");
 //        dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
 //        BarData data = new BarData(XlableBar, dataset);
+
         Message messag=new Message();
         messag.what= MainActivity.BAR_DATA;
 //        messag.obj=data;
@@ -67,7 +73,8 @@ public class Analysis {
         message.what=MainActivity.REMIND_NUMBER;
         handler.handleMessage(message);
 
-        message.what=MainActivity.SUM_REMIND_NUMBER;
+
+        message.what=MainActivity.TODAY_SCORE;
         handler.handleMessage(message);
     }
 

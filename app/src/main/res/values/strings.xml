@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">儿童坐姿</string>
     <string name="action_settings">ChildrenSittingPosture</string>
+    <string name="rest">休息一下吧!</string>
+    <string name="study">是时候学习了喔!</string>
 
 </resources>
