@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.administrator.childrensittingposture.R;
-import com.android.administrator.childrensittingposture.adapter.MyAdapter;
 import com.android.administrator.childrensittingposture.bean.CultivateDb;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -24,7 +24,10 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class HistoryActivity extends Activity implements View.OnClickListener {
@@ -32,6 +35,8 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
     private TextView tv_history_RestHours;
     private TextView tv_history_StutyHours;
     private ImageView img_history_back;
+
+
 
 
     //BarChart的相关数据
@@ -66,7 +71,6 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
 
     private List<CultivateDb> allCultivate = new ArrayList<>();
 
-    private MyAdapter adapter;
 
 
     @Override
@@ -76,18 +80,27 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_history);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_history);
 
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        String compareDay=String.valueOf(year)+"0"+String.valueOf(month+1)+String.valueOf(day-7);
+
+        Log.e("nowaday", compareDay);
+//        Log.e("year", String.valueOf(month+1));
+//        Log.e("year", String.valueOf(day));
+        List<CultivateDb>sevenData= DataSupport.where("thatDayTime>?",compareDay).limit(7).find(CultivateDb.class);
+
+        Log.e("sevenData", String.valueOf(sevenData.get(0).getThatDayTime()));
+        Log.e("sevenData", String.valueOf(sevenData.get(1).getThatDayTime()));
+        Log.e("sevenData", String.valueOf(sevenData.get(2).getThatDayTime()));
         initView();
         initListener();
-        // 加载数据
-        setLineBarData(8, 10);
-        setBarData();
-
-        adapter = new MyAdapter(HistoryActivity.this);
-
-//        adapter.setData(readContacts());
-
-//        listView.setAdapter(adapter);
-
+        // 加载图表数据
+        setLineBarData(8, sevenData);
+        setBarData(sevenData);
+        //加载其他数据
+        setOtherData(sevenData);
     }
     private void initView(){
         tv_history_StutyHours=(TextView)findViewById(R.id.tv_history_StutyHours);
@@ -99,7 +112,7 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
         img_history_back.setOnClickListener(this);
     }
 
-    private void setLineBarData(int count, float range) {
+    private void setLineBarData(int count, List<CultivateDb> sevenData) {
         lineChart = (LineChart) findViewById(R.id.lineChart);
         lineChart.setPinchZoom(true);                         //是否只能根据X,Y轴放大缩小
         lineChart.setDescription("近七日坐姿矫正次数");
@@ -138,17 +151,14 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
         yVals = new ArrayList<Entry>();
 
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 1; i < count; i++) {
             xVals.add((i) + "");
         }
 
-        for (int i = 0; i < count; i++) {
-
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult) + 3;// + (float)
-            // ((mult *
-            // 0.1) / 10);
+        for (int i =1;i<sevenData.size();i++){
+            float val=(float) sevenData.get(i).getRemindFrequency();
             yVals.add(new Entry(val, i));
+//            Log.e("sevenData", String.valueOf(sevenData.get(i).getRemindFrequency()));
         }
 
         linbarDataSet = new LineDataSet(yVals, "次数");
@@ -171,7 +181,7 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
         lineChart.invalidate();
     }
 
-    private void setBarData() {
+    private void setBarData(List<CultivateDb> sevenData) {
         mChart = (BarChart) findViewById(R.id.barChart);
         mChart.setDescription("近七日坐姿矫正次数");
         mChart.setMaxVisibleValueCount(60);             //一屏超过25列时不显示具体数值，设置超过60无效
@@ -198,14 +208,31 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
         yVals1 = new ArrayList<BarEntry>();
         labels = new ArrayList<String>();
 
-        int index = 0;
-
-        for (int i = 0; i < 9 + 1; i++) {
-            double sum = 20;
-            yVals1.add(new BarEntry((float) sum, index));
-            index++;
-            labels.add("40");
+//
+//
+//        for (int i = 1; i < count; i++) {
+//            xVals.add((i) + "");
+//        }
+//
+//        for (int i =1;i<sevenData.size();i++){
+//            float val=(float) sevenData.get(i).getRemindFrequency();
+//            yVals.add(new Entry(val, i));
+////            Log.e("sevenData", String.valueOf(sevenData.get(i).getRemindFrequency()));
+//        }
+        for (int i=1;i<8;i++){
+            labels.add((i)+"");
         }
+        for (int i =1;i<sevenData.size();i++){
+            float sum=(float)sevenData.get(i).getRemindFrequency();
+            yVals1.add(new BarEntry(sum,i));
+        }
+//        int index = 0;
+//        for (int i = 0; i < 9 + 1; i++) {
+//            double sum = 20;
+//            yVals1.add(new BarEntry((float) sum, index));
+//            index++;
+//            labels.add("10");
+//        }
         mChart.setDoubleTapToZoomEnabled(false);
         mChart.setDrawHighlightArrow(false);
 
@@ -220,24 +247,10 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
         mChart.animateY(2000);
         mChart.invalidate();
     }
-
-
-    public List<CultivateDb> readContacts() {
-
-//
-//        CultivateDb db=new CultivateDb();
-//        db.setThatDayTime("2016.01.07");
-//        db.setCultivateTime("3:10:10");
-//        db.setRemindFrequency("8");
-////        db.saveThrows();
-//        Log.d("TAG", "news id is " + db.getId());
-//        db.save();
-//        Log.d("TAG", "news id is " + db.getId());
-//        listContacts.add(db);
-//        allCultivate = DataSupport.findAll(CultivateDb.class);
-
-
-        return allCultivate;
+    private void setOtherData(List<CultivateDb> sevenData){
+//        Log.e("sevenData", String.valueOf(sevenData.get(0).getThatDayTime()));
+        tv_history_StutyHours.setText(String.valueOf(sevenData.get(6).getCultivateTime()));
+        tv_history_RestHours.setText("3");
     }
 
 

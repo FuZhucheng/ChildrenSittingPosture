@@ -13,6 +13,7 @@ import com.github.mikephil.charting.data.BarEntry;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,52 +31,100 @@ public class Analysis {
 
     //LineChart的数据、
 
-    public void analysis(Context context, String jsonData,Handler handler){
+    public void analysis(Context context, String jsonData, Handler handler) {
         try {
-                CultivateDb cultivateDb = new CultivateDb();
 
-            List<CultivateDb>postureBeanList=new ArrayList<>();
-            JSONArray jsonArray=new JSONArray(jsonData);
-            int index=0;
-            for (int i=0; i<jsonArray.length();i++){
-                JSONObject jsonObject=jsonArray.getJSONObject(i);
-//                postureBean.setId(jsonObject.getString("id"));
-                cultivateDb.setCultivateTime(jsonObject.getInt("cultivateTime"));
-                cultivateDb.setRemindFrequency(jsonObject.getInt("remindFrequency"));
-                cultivateDb.setSumRemindFrequency(jsonObject.getInt("sumRemindFrequency"));
-                cultivateDb.setThatDayTime(jsonObject.getString("date"));
+//            if (cultivateDb.getThatDayTime() > DataSupport.findLast(CultivateDb.class).getThatDayTime()&cultivateDb==null) {
+            List<CultivateDb> postureBeanList = new ArrayList<>();
+            JSONArray jsonArray = new JSONArray(jsonData);
 
-                postureBeanList.add(cultivateDb);
+            CultivateDb firstDb = DataSupport.findLast(CultivateDb.class);
+            if (firstDb == null) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    CultivateDb cultivateDb = new CultivateDb();
+                    cultivateDb.setCultivateTime(jsonObject.getInt("cultivateTime"));
+                    cultivateDb.setRemindFrequency(jsonObject.getInt("remindFrequency"));
+                    cultivateDb.setSumRemindFrequency(jsonObject.getInt("sumRemindFrequency"));
+                    cultivateDb.setThatDayTime(jsonObject.getInt("data"));
 
-                entriesBar.add(new BarEntry((float) cultivateDb.getRemindFrequency(),index));
-                index++;
-                XlableBar.add(cultivateDb.getThatDayTime());
-                Log.e("TAG", String.valueOf(cultivateDb.getId()));
-                cultivateDb.save();
-                Log.e("TAG", String.valueOf(cultivateDb.getId()));
+                    Log.e("today", String.valueOf(cultivateDb.getThatDayTime()));
+
+                    postureBeanList.add(cultivateDb);
+
+//                        entriesBar.add(new BarEntry((float) cultivateDb.getRemindFrequency(), index));
+//                        index++;
+//                        XlableBar.add(String.valueOf(cultivateDb.getThatDayTime()));
+                    Log.e("TAG_create", String.valueOf(cultivateDb.getId()));
+                    cultivateDb.save();
+                    Log.e("TAG_create", String.valueOf(cultivateDb.getId()));
+                }
+            } else {
+                JSONObject jsonObject_seven = jsonArray.getJSONObject(0);
+                int nowDay = jsonObject_seven.getInt("data");
+                if (firstDb.getThatDayTime() < nowDay) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        CultivateDb cultivateDb = new CultivateDb();
+                        cultivateDb.setCultivateTime(jsonObject.getInt("cultivateTime"));
+                        cultivateDb.setRemindFrequency(jsonObject.getInt("remindFrequency"));
+                        cultivateDb.setSumRemindFrequency(jsonObject.getInt("sumRemindFrequency"));
+                        cultivateDb.setThatDayTime(jsonObject.getInt("data"));
+
+                        postureBeanList.add(cultivateDb);
+                        Log.e("Data", String.valueOf(postureBeanList.get(2).getThatDayTime()));
+                        Log.e("Data", String.valueOf(postureBeanList.get(1).getThatDayTime()));
+
+//                            entriesBar.add(new BarEntry((float) cultivateDb.getRemindFrequency(), index));
+//                            index++;
+//                            XlableBar.add(String.valueOf(cultivateDb.getThatDayTime()));
+                        Log.e("TAG_refresh", String.valueOf(cultivateDb.getId()));
+                        cultivateDb.save();
+                        Log.e("TAG_refresh", String.valueOf(cultivateDb.getId()));
+                    }
+                } else {
+                    Log.e("not show", "false");
+                }
             }
-        }
-        catch (Exception e){
+
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 //        dataset = new BarDataSet(entriesBar, "");
 //        dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
 //        BarData data = new BarData(XlableBar, dataset);
+        CultivateDb todayDb = DataSupport.findLast(CultivateDb.class);
+//
+//        Log.e("today", String.valueOf(todayDb.getThatDayTime()));
+//        Log.e("today", String.valueOf(todayDb.getCultivateTime()));
+//        Log.e("today", String.valueOf(todayDb.getRemindFrequency()));
+//        Message messag = new Message();
+//        messag.what = MainActivity.TODAY_REST_CUMULATION_TIME;
+////        messag.obj=data;
+//        handler.handleMessage(messag);
 
-        Message messag=new Message();
-        messag.what= MainActivity.BAR_DATA;
-//        messag.obj=data;
-        handler.handleMessage(messag);
+
+        Message messageRemind = new Message();
+        messageRemind.what = MainActivity.REMIND_NUMBER;
+        messageRemind.obj = todayDb.getRemindFrequency();
+        handler.handleMessage(messageRemind);
+
+        Message messageStudyTime = new Message();
+        messageStudyTime.what = MainActivity.TODAY_STUDY_CUMULATION_TIME;
+        messageStudyTime.obj = todayDb.getCultivateTime();
+        handler.handleMessage(messageStudyTime);
 
 
-        Message message=new Message();
-        message.what=MainActivity.REMIND_NUMBER;
-        handler.handleMessage(message);
+//        message.what = MainActivity.TODAY_SCORE;
+//        handler.handleMessage(message);
 
 
-        message.what=MainActivity.TODAY_SCORE;
-        handler.handleMessage(message);
+//        List<CultivateDb>sevenData= DataSupport.findAll(CultivateDb.class);
+//        Log.e("sevenData", String.valueOf(sevenData.get(0).getThatDayTime()));
+//        Log.e("sevenData", String.valueOf(sevenData.get(1).getThatDayTime()));
+//        Log.e("sevenData", String.valueOf(sevenData.get(2).getThatDayTime()));
     }
 
 }

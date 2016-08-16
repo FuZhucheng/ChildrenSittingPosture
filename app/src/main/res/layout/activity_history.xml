@@ -172,7 +172,7 @@
                     android:layout_above="@+id/tv_history_RestHours"
                     android:layout_centerHorizontal="true"
                     android:background="@color/white"
-                    android:text="总学习时长"
+                    android:text="总休息时长"
                     android:textSize="18sp"
                     android:textColor="@color/gray"/>
 

@@ -19,8 +19,8 @@
 
 
     <style name="AnimationPreview">
-        <item name="android:windowEnterAnimation">@anim/fade_in</item>
-        <item name="android:windowExitAnimation">@anim/fade_out</item>
+        <item name="android:windowEnterAnimation">@anim/in</item>
+        <item name="android:windowExitAnimation">@anim/out</item>
     </style>
 
     <style name="MyClockStyle">
@@ -32,5 +32,11 @@
         <item name="center_clock">@drawable/hand_center</item>
     </style>
 
+    <style name="Dialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">@color/white</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item><!--边框-->
+    </style>
 
 </resources>

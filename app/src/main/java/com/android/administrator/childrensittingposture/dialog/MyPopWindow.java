@@ -14,12 +14,21 @@ import com.android.administrator.childrensittingposture.activity.HistoryActivity
 import com.android.administrator.childrensittingposture.activity.SettingActivity;
 
 /**
- * Created by asus on 2016/7/24.
+ * Created by 符柱成 on 2016/7/24.
  */
-public class AddPopWindow extends PopupWindow {
+public class MyPopWindow extends PopupWindow {
     private View conentView;
+    private Activity context;
 
-    public AddPopWindow(final Activity context) {
+    public MyPopWindow(final Activity context) {
+        super(context);
+        this.context = context;
+        this.initPopupWindow();
+
+
+    }
+
+    private void initPopupWindow() {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         conentView = inflater.inflate(R.layout.popuo_dialog, null);
@@ -51,7 +60,6 @@ public class AddPopWindow extends PopupWindow {
 
             @Override
             public void onClick(View arg0) {
-//                AddPopWindow.this.dismiss();
                 Intent intent_automaticallyRemind = new Intent();
                 intent_automaticallyRemind.setClass(context, SettingActivity.class);
                 context.startActivity(intent_automaticallyRemind);

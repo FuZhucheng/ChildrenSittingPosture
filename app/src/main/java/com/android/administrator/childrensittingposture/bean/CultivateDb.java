@@ -11,7 +11,7 @@ public class CultivateDb extends DataSupport {
     private int cultivateTime;                  //学习累计时间
     private int remindFrequency;     //当天提醒次数
     private int sumRemindFrequency;  //总提醒次数
-    private String thatDayTime;                 //当天日期
+    private int thatDayTime;                 //当天日期
 
     public int getId() {
         return id;
@@ -45,11 +45,11 @@ public class CultivateDb extends DataSupport {
         this.sumRemindFrequency = sumRemindFrequency;
     }
 
-    public String getThatDayTime() {
+    public int getThatDayTime() {
         return thatDayTime;
     }
 
-    public void setThatDayTime(String thatDayTime) {
+    public void setThatDayTime(int thatDayTime) {
         this.thatDayTime = thatDayTime;
     }
 }

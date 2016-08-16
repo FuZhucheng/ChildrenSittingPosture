@@ -25,7 +25,7 @@ public class SendRequest {
             @Override
             public void run() {
                 final Request request=new Request.Builder()
-                                                                        .url("http://test.lab.nichoeit.com/json/")
+                                                                        .url("http://fuzhufuzhu.com:8916/sds2016")
                                                                         .build();
                 Response response=null;
                 try{

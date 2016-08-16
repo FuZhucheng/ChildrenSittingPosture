@@ -1,8 +1,11 @@
 package com.android.administrator.childrensittingposture.activity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +14,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.administrator.childrensittingposture.R;
+import com.android.administrator.childrensittingposture.dialog.SettingDialog;
 import com.android.administrator.childrensittingposture.dialog.ToastCommom;
 import com.android.administrator.childrensittingposture.view.PickerView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -28,13 +33,21 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class SettingActivity extends Activity  implements View.OnClickListener{
+public class SettingActivity extends Activity implements View.OnClickListener {
 
+    private Timer timer_study;        //学习定时器
+    private Timer timer_rest;       //休息定时器
+    private TimerTask taskStudy;        //学习的任务
+    private TimerTask taskRest;         //休息的任务
+    private Handler settingHandler;
 
-    private ToastCommom toastCommom;
+    private String studySetting = new String();         //设定的学习与休息时间
+    private String restSetting = new String();
 
-    PickerView pv_hour;
-    PickerView pv_minute;
+    private ToastCommom toastCommom;        //自定义吐司
+
+    PickerView pv_study;
+    PickerView pv_rest;
     private TextView tv__setting_remind;
     private ImageView img_setting_back;
 
@@ -47,8 +60,8 @@ public class SettingActivity extends Activity  implements View.OnClickListener{
     List<String> secondsStart;
 
 
-    JSONObject person;
-    JSONArray phone;
+    JSONObject jsonRemind;              //post
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,124 +69,103 @@ public class SettingActivity extends Activity  implements View.OnClickListener{
         setContentView(R.layout.activity_setting);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlt_setting);
 
+        settingHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                // TODO Auto-generated method stub
+                // 要做的事情
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case 1:
+                        try {
+                            // 首先最外层是{}，是创建一个对象
+                            jsonRemind = new JSONObject();
+                            jsonRemind.put("studyOrRestSign", "0");
 
-        try {
-            // 首先最外层是{}，是创建一个对象
-            person = new JSONObject();
-            // 第一个键phone的值是数组，所以需要创建数组对象
-//            phone = new JSONArray();
-            person.put("startTime","20");
-            person.put("endTime", "8");
+                        } catch (JSONException ex) {
+                            // 键为null或使用json不支持的数字格式(NaN, infinities)
+                            throw new RuntimeException(ex);
+                        }
+                        break;
+                    case 2:
+                        try {
+                            // 首先最外层是{}，是创建一个对象
+                            jsonRemind = new JSONObject();
+                            jsonRemind.put("studyOrRestSign", "1");
 
-            person.put("continuityTime", "20");
-            person.put("restTime", "20");
-//            // 键address的值是对象，所以又要创建一个对象
-//            address = new JSONObject();
-//            address.put("startTime", "20");
-//            address.put("endTime", "8");
-//            person.put("address", address);
+                        } catch (JSONException ex) {
+                            // 键为null或使用json不支持的数字格式(NaN, infinities)
+                            throw new RuntimeException(ex);
+                        }
+                        break;
+                }
+            }
+        };
 
-        } catch (JSONException ex) {
-            // 键为null或使用json不支持的数字格式(NaN, infinities)
-            throw new RuntimeException(ex);
-        }
 
-        initView(person);
+
+
+        initView();
         initList();
         initListener();
-
-
         setHoursStart();
         setMinuteStart();
 
-
-
-
-
     }
 
 
-    private void initView(final JSONObject person) {
-        tv__setting_remind=(TextView)findViewById(R.id.tv__setting_remind);
-        pv_hour=(PickerView)findViewById(R.id.pv_hour);
-        pv_minute=(PickerView)findViewById(R.id.pv_minute);
-        img_setting_back=(ImageView)findViewById(R.id.img_setting_back);
-
-
-        tv__setting_remind.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                                //开启一个线程，做联网操作
-                new Thread() {
-                    @Override
-                    public void run() {
-
-                        postJson(person);
-                    }
-                }.start();
-            }
-        });
-//        tv_sure.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //开启一个线程，做联网操作
-////                new Thread() {
-////                    @Override
-////                    public void run() {
-////
-////                        postJson(person);
-////                    }
-////                }.start();
-//            }
-//        });
+    private void initView() {
+        tv__setting_remind = (TextView) findViewById(R.id.tv__setting_remind);
+        pv_study = (PickerView) findViewById(R.id.pv_hour);
+        pv_rest = (PickerView) findViewById(R.id.pv_minute);
+        img_setting_back = (ImageView) findViewById(R.id.img_setting_back);
     }
-    private void initListener(){
+
+    private void initListener() {
+        tv__setting_remind.setOnClickListener(this);
         img_setting_back.setOnClickListener(this);
     }
 
-            private void initList() {
-                hours = new ArrayList<String>();
-                minute = new ArrayList<String>();
-                secondsStart = new ArrayList<String>();
+    private void initList() {
+        hours = new ArrayList<String>();
+        minute = new ArrayList<String>();
+        secondsStart = new ArrayList<String>();
+    }
 
 
-
+    private void setHoursStart() {
+        for (int i = 0; i < 24; i++) {
+            hours.add("" + i);
+        }
+        studySetting = "12";
+        pv_study.setData(hours);
+        pv_study.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                toastCommom = ToastCommom.createToastConfig();
+                toastCommom.ToastShow(SettingActivity.this, (ViewGroup) findViewById(R.id.toast_layout_root), "选择了 " + text + " 时");
+                studySetting = text;
             }
+        });
 
+    }
 
+    private void setMinuteStart() {
+        for (int i = 0; i < 60; i++) {
+            minute.add(i < 10 ? "0" + i : "" + i);
+        }
+        restSetting = "30";
+        pv_rest.setData(minute);
+        pv_rest.setOnSelectListener(new PickerView.onSelectListener() {
 
-            private void setHoursStart() {
-                for (int i = 0; i < 24; i++) {
-                    hours.add("" + i);
-                }
-                pv_hour.setData(hours);
-                pv_hour.setOnSelectListener(new PickerView.onSelectListener() {
-                    @Override
-                    public void onSelect(String text) {
-                        toastCommom = ToastCommom.createToastConfig();
-                        toastCommom.ToastShow(SettingActivity.this, (ViewGroup)findViewById(R.id.toast_layout_root),"选择了 " +  text+ " 时");
-
-                    }
-                });
-
+            @Override
+            public void onSelect(String text) {
+                toastCommom = ToastCommom.createToastConfig();
+                toastCommom.ToastShow(SettingActivity.this, (ViewGroup) findViewById(R.id.toast_layout_root), "选择了 " + text + " 分");
+                restSetting = text;
             }
-
-            private void setMinuteStart() {
-                for (int i = 0; i < 60; i++) {
-                    minute.add(i < 10 ? "0" + i : "" + i);
-                }
-                pv_minute.setData(minute);
-                pv_minute.setOnSelectListener(new PickerView.onSelectListener() {
-
-                    @Override
-                    public void onSelect(String text) {
-                        toastCommom = ToastCommom.createToastConfig();
-                        toastCommom.ToastShow(SettingActivity.this, (ViewGroup)findViewById(R.id.toast_layout_root), "选择了 " + text+ " 分");
-//                        Toast.makeText(SettingActivity.this, "选择了 " + text + " 分",
-//                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
+        });
+    }
 
     private void postJson(JSONObject persona) {
         //申明给服务端传递一个json串
@@ -188,11 +180,11 @@ public class SettingActivity extends Activity  implements View.OnClickListener{
                 .build();
         //发送请求获取响应
         try {
-            Response response=okHttpClient.newCall(request).execute();
+            Response response = okHttpClient.newCall(request).execute();
             //判断请求是否成功
-            if(response.isSuccessful()){
+            if (response.isSuccessful()) {
                 //打印服务端返回结果
-                Log.e("success",response.body().string());
+                Log.e("success", response.body().string());
 
             }
         } catch (IOException e) {
@@ -204,11 +196,77 @@ public class SettingActivity extends Activity  implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.img_setting_back :
-                Intent intent_settingBack=new Intent();
-                intent_settingBack.setClass(SettingActivity.this,MainActivity.class);
+        switch (v.getId()) {
+            case R.id.img_setting_back:
+                Intent intent_settingBack = new Intent();
+                intent_settingBack.setClass(SettingActivity.this, MainActivity.class);
                 startActivity(intent_settingBack);
+                break;
+            case R.id.tv__setting_remind:
+                //开启一个线程，做联网操作
+                new Thread() {
+                    @Override
+                    public void run() {
+//                        postJson(jsonRemind);
+                        Log.e("string", studySetting);
+                        Log.e("string", restSetting);
+                        if (timer_study == null) {
+                            taskStudy = new TimerTask() {
+                                @Override
+                                public void run() {
+                                    // TODO Auto-generated method stub
+                                    Message message = new Message();
+                                    message.what = 1;
+                                    settingHandler.sendMessage(message);
+                                }
+                            };
+                            taskRest = new TimerTask() {
+                                @Override
+                                public void run() {
+                                    // TODO Auto-generated method stub
+                                    Message messageRest = new Message();
+                                    messageRest.what = 2;
+                                    settingHandler.sendMessage(messageRest);
+                                }
+                            };
+
+                            timer_study = new Timer();
+                            timer_study.schedule(taskStudy, Integer.valueOf(studySetting).intValue());
+                            timer_rest = new Timer();
+                            timer_rest.schedule(taskRest, Integer.valueOf(studySetting).intValue() + Integer.valueOf(restSetting).intValue());
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    SettingDialog.Builder builder=new SettingDialog.Builder(SettingActivity.this);
+                                    builder.setPositiveButton("确定",new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            //设置你的操作事项
+                                            timer_study.cancel();
+                                            timer_study=null;
+                                            taskStudy.cancel();
+                                            taskStudy=null;
+                                            timer_rest.cancel();
+                                            timer_rest=null;
+                                            taskRest.cancel();
+                                            taskRest=null;
+                                        }
+                                    });
+                                    builder.setNegativeButton("取消",
+                                            new android.content.DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                    builder.create().show();
+
+                                }
+                            });
+                        }
+                    }
+                }.start();
+
                 break;
         }
     }
