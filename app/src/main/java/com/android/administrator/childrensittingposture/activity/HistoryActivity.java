@@ -23,6 +23,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.litepal.crud.DataSupport;
 
@@ -76,6 +77,8 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CrashReport.initCrashReport(getApplicationContext(), "b9188325fd", false);
+
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_history);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_history);
@@ -91,9 +94,9 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
 //        Log.e("year", String.valueOf(day));
         List<CultivateDb>sevenData= DataSupport.where("thatDayTime>?",compareDay).limit(7).find(CultivateDb.class);
 
-        Log.e("sevenData", String.valueOf(sevenData.get(0).getThatDayTime()));
-        Log.e("sevenData", String.valueOf(sevenData.get(1).getThatDayTime()));
-        Log.e("sevenData", String.valueOf(sevenData.get(2).getThatDayTime()));
+//        Log.e("sevenData", String.valueOf(sevenData.get(0).getThatDayTime()));
+//        Log.e("sevenData", String.valueOf(sevenData.get(1).getThatDayTime()));
+//        Log.e("sevenData", String.valueOf(sevenData.get(2).getThatDayTime()));
         initView();
         initListener();
         // 加载图表数据
@@ -249,8 +252,10 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
     }
     private void setOtherData(List<CultivateDb> sevenData){
 //        Log.e("sevenData", String.valueOf(sevenData.get(0).getThatDayTime()));
-        tv_history_StutyHours.setText(String.valueOf(sevenData.get(6).getCultivateTime()));
-        tv_history_RestHours.setText("3");
+        if (sevenData!=null) {
+            tv_history_StutyHours.setText(String.valueOf(sevenData.get(6).getCultivateTime()));
+            tv_history_RestHours.setText("3");
+        }
     }
 
 

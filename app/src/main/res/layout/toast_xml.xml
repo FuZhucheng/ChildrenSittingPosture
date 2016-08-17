@@ -11,6 +11,7 @@
         android:id="@+id/iv"
         android:layout_width="25dp"
         android:layout_height="25dp"
+        android:background="@color/blue"
         android:layout_marginRight="8dp"
         android:src="@drawable/bear" />
 
@@ -19,5 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
+        android:background="@color/blue"
         android:textSize="22sp" />
 </LinearLayout>

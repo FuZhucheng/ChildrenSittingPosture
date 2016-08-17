@@ -60,7 +60,7 @@ public class Analysis {
                     Log.e("TAG_create", String.valueOf(cultivateDb.getId()));
                 }
             } else {
-                JSONObject jsonObject_seven = jsonArray.getJSONObject(0);
+                JSONObject jsonObject_seven = jsonArray.getJSONObject(6);
                 int nowDay = jsonObject_seven.getInt("data");
                 if (firstDb.getThatDayTime() < nowDay) {
                     for (int i = 0; i < jsonArray.length(); i++) {
@@ -72,14 +72,16 @@ public class Analysis {
                         cultivateDb.setThatDayTime(jsonObject.getInt("data"));
 
                         postureBeanList.add(cultivateDb);
-                        Log.e("Data", String.valueOf(postureBeanList.get(2).getThatDayTime()));
-                        Log.e("Data", String.valueOf(postureBeanList.get(1).getThatDayTime()));
+//                        Log.e("Data", String.valueOf(postureBeanList.get(2).getThatDayTime()));
+                        Log.e("Data", String.valueOf(postureBeanList.get(0).getThatDayTime()));
 
 //                            entriesBar.add(new BarEntry((float) cultivateDb.getRemindFrequency(), index));
 //                            index++;
 //                            XlableBar.add(String.valueOf(cultivateDb.getThatDayTime()));
                         Log.e("TAG_refresh", String.valueOf(cultivateDb.getId()));
-                        cultivateDb.save();
+                        if (jsonObject.getInt("data")>firstDb.getThatDayTime()){
+                            cultivateDb.save();
+                        }
                         Log.e("TAG_refresh", String.valueOf(cultivateDb.getId()));
                     }
                 } else {
@@ -116,15 +118,16 @@ public class Analysis {
         messageStudyTime.obj = todayDb.getCultivateTime();
         handler.handleMessage(messageStudyTime);
 
+        Message messageScore=new Message();
+        messageScore.what = MainActivity.TODAY_SCORE;
+        handler.handleMessage(messageScore);
 
-//        message.what = MainActivity.TODAY_SCORE;
-//        handler.handleMessage(message);
 
+        List<CultivateDb>sevenData= DataSupport.findAll(CultivateDb.class);
+        Log.e("sevenData", String.valueOf(sevenData.get(0).getThatDayTime()));
+        Log.e("sevenData", String.valueOf(sevenData.get(1).getThatDayTime()));
+        Log.e("sevenData", String.valueOf(sevenData.get(2).getThatDayTime()));
 
-//        List<CultivateDb>sevenData= DataSupport.findAll(CultivateDb.class);
-//        Log.e("sevenData", String.valueOf(sevenData.get(0).getThatDayTime()));
-//        Log.e("sevenData", String.valueOf(sevenData.get(1).getThatDayTime()));
-//        Log.e("sevenData", String.valueOf(sevenData.get(2).getThatDayTime()));
     }
 
 }

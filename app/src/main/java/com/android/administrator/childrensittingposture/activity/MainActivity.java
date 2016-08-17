@@ -22,6 +22,7 @@ import com.android.administrator.childrensittingposture.R;
 import com.android.administrator.childrensittingposture.bean.CultivateDb;
 import com.android.administrator.childrensittingposture.dao.SendRequest;
 import com.android.administrator.childrensittingposture.dialog.MyPopWindow;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,6 +76,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CrashReport.initCrashReport(getApplicationContext(), "b9188325fd", false);
+
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_main);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
@@ -102,6 +105,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
         img_main_setting = (ImageView) findViewById(R.id.img_main_setting);
         img_heart = (ImageView) findViewById(R.id.img_heart);
 
+        if (mainDb!=null) {
+            tv_studyOrRestTime.setText("0:" + String.valueOf(mainDb.getCultivateTime()) + ":26");
+            tv_main_todayLearn.setText(String.valueOf(mainDb.getCultivateTime()));
+            tv_main_todayRest.setText("30");
+            tv_main_todayRectify.setText(String.valueOf(mainDb.getRemindFrequency()));
+            tv_main_todayScore.setText("88");
+
+        }
         //设置的旋转动画
         rotateAnimation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnimation.setDuration(2000);
@@ -132,9 +143,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-//                                 tv_frequency.setText("8");
-//                                CultivateDb firstDb = DataSupport.findFirst(CultivateDb.class);
-//                                tv_frequency.setText(firstDb.getRemindFrequency()+"");
                                 tv_main_todayRectify.setText(String.valueOf(msg.obj));
                             }
                         });
@@ -142,7 +150,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                tv_main_todayRest.setText("40");
+                                tv_main_todayRest.setText("30");
                             }
                         });
                         break;
@@ -150,7 +158,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                tv_main_todayScore.setText("86");
+                                tv_main_todayScore.setText("88");
                             }
                         });
                 }
