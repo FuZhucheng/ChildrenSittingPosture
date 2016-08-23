@@ -14,7 +14,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by asus on 2016/7/20.
+ * Created by 符柱成 on 2016/7/20.
  */
 public class SendRequest {
 

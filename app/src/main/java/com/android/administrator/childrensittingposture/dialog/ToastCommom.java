@@ -46,7 +46,7 @@ public class ToastCommom {
         text.setText(tvString);
 //        text.setTextColor(R.color.white);
         toast = new Toast(context);
-        toast.setGravity(Gravity.CENTER, 0, 750);
+        toast.setGravity(Gravity.CENTER, 0, 700);
         toast.setDuration(Toast.LENGTH_LONG);
         toast.setView(layout);
         toast.show();

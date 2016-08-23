@@ -6,12 +6,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.administrator.childrensittingposture.R;
 import com.android.administrator.childrensittingposture.bean.CultivateDb;
+import com.android.administrator.childrensittingposture.dialog.ToastCommom;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -72,8 +74,8 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
 
     private List<CultivateDb> allCultivate = new ArrayList<>();
 
-
-
+    String compareDay;
+    List<CultivateDb>sevenData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,18 +89,19 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
-        String compareDay=String.valueOf(year)+"0"+String.valueOf(month+1)+String.valueOf(day-7);
+        compareDay=String.valueOf(year)+"0"+String.valueOf(month+1)+String.valueOf(day-7);
 
         Log.e("nowaday", compareDay);
 //        Log.e("year", String.valueOf(month+1));
 //        Log.e("year", String.valueOf(day));
-        List<CultivateDb>sevenData= DataSupport.where("thatDayTime>?",compareDay).limit(7).find(CultivateDb.class);
+        sevenData= DataSupport.where("thatDayTime>?",compareDay).limit(7).find(CultivateDb.class);
 
 //        Log.e("sevenData", String.valueOf(sevenData.get(0).getThatDayTime()));
 //        Log.e("sevenData", String.valueOf(sevenData.get(1).getThatDayTime()));
 //        Log.e("sevenData", String.valueOf(sevenData.get(2).getThatDayTime()));
         initView();
         initListener();
+
         // 加载图表数据
         setLineBarData(8, sevenData);
         setBarData(sevenData);
@@ -109,14 +112,15 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
         tv_history_StutyHours=(TextView)findViewById(R.id.tv_history_StutyHours);
         tv_history_RestHours=(TextView)findViewById(R.id.tv_history_RestHours);
         img_history_back=(ImageView)findViewById(R.id.img_history_back);
-
+        lineChart = (LineChart) findViewById(R.id.lineChart);
+        mChart = (BarChart) findViewById(R.id.barChart);
     }
     private void initListener(){
         img_history_back.setOnClickListener(this);
     }
 
     private void setLineBarData(int count, List<CultivateDb> sevenData) {
-        lineChart = (LineChart) findViewById(R.id.lineChart);
+
         lineChart.setPinchZoom(true);                         //是否只能根据X,Y轴放大缩小
         lineChart.setDescription("近七日坐姿矫正次数");
         lineChart.setDescriptionColor(Gray);
@@ -185,7 +189,7 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
     }
 
     private void setBarData(List<CultivateDb> sevenData) {
-        mChart = (BarChart) findViewById(R.id.barChart);
+
         mChart.setDescription("近七日坐姿矫正次数");
         mChart.setMaxVisibleValueCount(60);             //一屏超过25列时不显示具体数值，设置超过60无效
         mChart.setPinchZoom(true);                         //是否只能根据X,Y轴放大缩小
@@ -252,7 +256,15 @@ public class HistoryActivity extends Activity implements View.OnClickListener {
     }
     private void setOtherData(List<CultivateDb> sevenData){
 //        Log.e("sevenData", String.valueOf(sevenData.get(0).getThatDayTime()));
-        if (sevenData!=null) {
+        CultivateDb compareDb = DataSupport.findLast(CultivateDb.class);
+        if (Integer.valueOf(compareDay)+7>compareDb.getThatDayTime()) {
+
+            tv_history_StutyHours.setText(String.valueOf(sevenData.get(5).getCultivateTime()));
+            tv_history_RestHours.setText("3");
+             ToastCommom toastCommom;        //自定义吐司
+            toastCommom = ToastCommom.createToastConfig();
+            toastCommom.ToastShow(HistoryActivity.this, (ViewGroup) findViewById(R.id.toast_layout_root), "你还没有更新数据喔！！");
+        }else {
             tv_history_StutyHours.setText(String.valueOf(sevenData.get(6).getCultivateTime()));
             tv_history_RestHours.setText("3");
         }

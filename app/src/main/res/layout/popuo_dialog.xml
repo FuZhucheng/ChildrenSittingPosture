@@ -67,6 +67,51 @@
                 android:textSize="15dip" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/llayout_height"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp" >
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/height" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="身高设置"
+                android:textColor="@color/white"
+                android:textSize="15dip" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llayout_wifi"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp" >
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/wifi" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="wifi设置"
+                android:textColor="@color/white"
+                android:textSize="15dip" />
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

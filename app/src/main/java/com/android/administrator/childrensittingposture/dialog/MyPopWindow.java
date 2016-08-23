@@ -2,6 +2,7 @@ package com.android.administrator.childrensittingposture.dialog;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
@@ -10,8 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.android.administrator.childrensittingposture.R;
+import com.android.administrator.childrensittingposture.activity.HeightActivity;
 import com.android.administrator.childrensittingposture.activity.HistoryActivity;
 import com.android.administrator.childrensittingposture.activity.SettingActivity;
+import com.android.administrator.childrensittingposture.activity.WifiActivity;
+import com.android.administrator.childrensittingposture.bean.CultivateDb;
+
+import org.litepal.crud.DataSupport;
 
 /**
  * Created by 符柱成 on 2016/7/24.
@@ -56,6 +62,10 @@ public class MyPopWindow extends PopupWindow {
                 .findViewById(R.id.llayout_remind);
         LinearLayout llayout_history = (LinearLayout) conentView
                 .findViewById(R.id.llayout_history);
+        LinearLayout llayout_height = (LinearLayout) conentView
+                .findViewById(R.id.llayout_height);
+        LinearLayout llayout_wifi = (LinearLayout) conentView
+                .findViewById(R.id.llayout_wifi);
         llayout_remind.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -65,14 +75,50 @@ public class MyPopWindow extends PopupWindow {
                 context.startActivity(intent_automaticallyRemind);
             }
         });
+        llayout_wifi.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View arg0) {
+                Intent intent_wifi = new Intent();
+                intent_wifi.setClass(context, WifiActivity.class);
+                context.startActivity(intent_wifi);
+            }
+        });
+        llayout_height.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Intent intent_height = new Intent();
+                intent_height.setClass(context, HeightActivity.class);
+                context.startActivity(intent_height);
+            }
+        });
         llayout_history.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent_history = new Intent();
-                intent_history.setClass(context, HistoryActivity.class);
-                context.startActivity(intent_history);
+                 CultivateDb popDb = DataSupport.findLast(CultivateDb.class);
+                if (popDb ==null){
+                    PopDialog.Builder builder=new PopDialog.Builder(context);
+                    builder.setPositiveButton("确定",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            //设置你的操作事项
+                        }
+                    });
+                    builder.setNegativeButton("取消",
+                            new android.content.DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    builder.create().show();
+
+                }else {
+                    Intent intent_history = new Intent();
+                    intent_history.setClass(context, HistoryActivity.class);
+                    context.startActivity(intent_history);
+                }
             }
         });
     }
