@@ -220,6 +220,13 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                                     settingHandler.sendMessage(message);
                                 }
                             };
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    toastCommom = ToastCommom.createToastConfig();
+                                    toastCommom.ToastShow(SettingActivity.this, (ViewGroup) findViewById(R.id.toast_layout_root), "设置成功");                                }
+                            });
                             taskRest = new TimerTask() {
                                 @Override
                                 public void run() {
@@ -234,6 +241,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                             timer_study.schedule(taskStudy, Integer.valueOf(studySetting).intValue());
                             timer_rest = new Timer();
                             timer_rest.schedule(taskRest, Integer.valueOf(studySetting).intValue() + Integer.valueOf(restSetting).intValue());
+
                         } else {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -266,6 +274,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                         }
                     }
                 }.start();
+
 
                 break;
         }

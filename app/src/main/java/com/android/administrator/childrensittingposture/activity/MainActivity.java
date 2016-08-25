@@ -92,6 +92,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         initView();
         initListener();
+
     }
 
     private void initView() {
@@ -105,7 +106,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         img_main_setting = (ImageView) findViewById(R.id.img_main_setting);
         img_heart = (ImageView) findViewById(R.id.img_heart);
 
-        if (mainDb!=null) {
+        if (mainDb != null) {
             tv_studyOrRestTime.setText("0:" + String.valueOf(mainDb.getCultivateTime()) + ":26");
             tv_main_todayLearn.setText(String.valueOf(mainDb.getCultivateTime()));
             tv_main_todayRest.setText("30");
@@ -146,7 +147,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                 tv_main_todayRectify.setText(String.valueOf(msg.obj));
                             }
                         });
-                    case  TODAY_REST_CUMULATION_TIME :
+                    case TODAY_REST_CUMULATION_TIME:
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -214,11 +215,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     tv_mainRemind.startAnimation(scaleAnimation);
                     //圆圈的数据
                     tv_studyOrRest.setText("REST");
-                    if (mainDb.getCultivateTime()<60){
-                        tv_studyOrRestTime.setText("0:"+mainDb.getCultivateTime()+":20");
+                    if (mainDb.getCultivateTime() < 60) {
+                        tv_studyOrRestTime.setText("0:" + mainDb.getCultivateTime() + ":20");
                         jsonStudyOrRest = new JSONObject();
                         try {
-                            jsonStudyOrRest.put("studyOrRestSign","1");
+                            jsonStudyOrRest.put("studyOrRestSign", "1");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -241,7 +242,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     tv_studyOrRestTime.setText("0:20:26");
                     jsonStudyOrRest = new JSONObject();
                     try {
-                        jsonStudyOrRest.put("studyOrRestSign","0");
+                        jsonStudyOrRest.put("studyOrRestSign", "0");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -282,11 +283,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 .build();
         //发送请求获取响应
         try {
-            Response response=okHttpClient.newCall(request).execute();
+            Response response = okHttpClient.newCall(request).execute();
             //判断请求是否成功
-            if(response.isSuccessful()){
+            if (response.isSuccessful()) {
                 //打印服务端返回结果
-                Log.e("success",response.body().string());
+                Log.e("success", response.body().string());
 
             }
         } catch (IOException e) {
